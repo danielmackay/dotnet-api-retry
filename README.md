@@ -2,7 +2,7 @@
 
 > Based off of Nick Chapsas's Youtube [video](https://youtu.be/nJH0PC2Pubs)
 
-<!-- ## 💡 Overview -->
+## 💡 Overview
 
 Simple Web API that returns Star Wars People from an external API.  `IHttpClientFactory` and `Polly` have been used to implement a transient retry policy.
 
