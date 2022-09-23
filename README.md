@@ -1,9 +1,7 @@
 # .NET API Retry
 
 [![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square)](https://gitmoji.dev)
-
 [![.NET](https://github.com/danielmackay/dotnet-api-retry/actions/workflows/dotnet.yml/badge.svg)](https://github.com/danielmackay/dotnet-api-retry/actions/workflows/dotnet.yml)
-
 [![Licence](https://img.shields.io/badge/licence-MIT-brightgreen)](https://github.com/danielmackay/dotnet-api-retry/blob/main/licence.md)
 
 > Based off of Nick Chapsas's Youtube [video](https://youtu.be/nJH0PC2Pubs)
