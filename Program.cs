@@ -8,7 +8,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddTransient<IStarWarsClient, StarWarsClient>();
+builder.Services.AddHttpClient(StarWarsClient.ClientName, client =>
+{
+    client.BaseAddress = new Uri("https://swapi.dev/api/");
+});
 
 var app = builder.Build();
 

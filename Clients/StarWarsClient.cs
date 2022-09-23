@@ -4,11 +4,17 @@ namespace dotnet_api_retry.Controllers;
 
 public class StarWarsClient : IStarWarsClient
 {
+    public const string ClientName = "StarWarsClient";
+    private HttpClient _client;
+
+    public StarWarsClient(IHttpClientFactory httpClientFactory)
+    {
+        _client = httpClientFactory.CreateClient(ClientName);
+    }
+
     public async Task<People?> GetPeople(int peopleID)
     {
-        using var client = new HttpClient();
-        
-        var response =  await client.GetAsync($"https://swapi.dev/api/people/{peopleID}");
+        var response =  await _client.GetAsync($"people/{peopleID}");
         if (!response.IsSuccessStatusCode)
             return null;
         
