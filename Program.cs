@@ -1,4 +1,7 @@
 using dotnet_api_retry.Controllers;
+using Polly;
+using Polly.Contrib.WaitAndRetry;
+using Microsoft.Extensions.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +14,17 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IStarWarsClient, StarWarsClient>();
 builder.Services.AddHttpClient(StarWarsClient.ClientName, client =>
-{
-    client.BaseAddress = new Uri("https://swapi.dev/api/");
-});
+    {
+        client.BaseAddress = new Uri("https://swapi.dev/api/");
+    })
+    .AddPolicyHandler(Policy<HttpResponseMessage>
+        .Handle<HttpRequestException>()
+        .OrResult(x => x.StatusCode is >= System.Net.HttpStatusCode.InternalServerError or System.Net.HttpStatusCode.RequestTimeout)
+        .WaitAndRetryAsync(
+            Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 5)
+        )
+        
+        );
 
 var app = builder.Build();
 
