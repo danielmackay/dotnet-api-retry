@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,14 +18,18 @@ builder.Services.AddHttpClient(StarWarsClient.ClientName, client =>
     {
         client.BaseAddress = new Uri("https://swapi.dev/api/");
     })
-    .AddPolicyHandler(Policy<HttpResponseMessage>
-        .Handle<HttpRequestException>()
-        .OrResult(x => x.StatusCode is >= System.Net.HttpStatusCode.InternalServerError or System.Net.HttpStatusCode.RequestTimeout)
-        .WaitAndRetryAsync(
-            Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 5)
-        )
-        
-        );
+    // Simplified Transient Policy
+    .AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.WaitAndRetryAsync(
+        Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 5)
+    ));
+    // Raw Policy
+    // .AddPolicyHandler(Policy<HttpResponseMessage>
+    //     .Handle<HttpRequestException>()
+    //     .OrResult(x => x.StatusCode is >= System.Net.HttpStatusCode.InternalServerError or System.Net.HttpStatusCode.RequestTimeout)
+    //     .WaitAndRetryAsync(
+    //         Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 5)
+    //     )
+    //);
 
 var app = builder.Build();
 
